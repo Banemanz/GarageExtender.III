@@ -1,0 +1,1 @@
+Added local save-garage enum aliases and quadrupled capacities: Portland 1 -> 4, Staunton 2 -> 8, and Shoreside 3 -> 12, while allocating 24 physical slots per safehouse bank for patched Save/Load compatibility. 
