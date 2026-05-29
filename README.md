@@ -64,20 +64,6 @@ These ID aliases are just helper constants. The game stores garage behavior by `
 #include "CStoredCar.h"
 ```
 
-Do **not** include the repository folder path in generated plugin projects. The CPP is written for plugin-sdk project include directories, not for `#include "pluginsdk/..."` paths.
-
----
-
-## Installation / Build
-
-1. Create a GTA III plugin-sdk project.
-2. Copy `GTA3QuadrupleSaveGarageLimit.cpp` into the project source folder.
-3. Either compile it as an additional `.cpp`, or replace the generated `Main.cpp` with its contents.
-4. Build the ASI/DLL normally.
-5. Install the built ASI into the GTA III game folder through your usual ASI loader setup.
-
-No plugin-sdk headers need to be edited.
-
 ---
 
 ## Adding an extra savehouse garage
