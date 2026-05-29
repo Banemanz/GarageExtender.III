@@ -5,7 +5,7 @@
 
 ### Quadrupled vanilla safehouse capacity
 
-The three original save garages keep their vanilla behavior, but their stored-car capacity is increased:
+The three original save garages keep their vanilla behavior, but their stored-car capacity is increased: Can be configured in ini, there is a 24 cap to number of cars per garage.
 
 | Garage type | Vanilla capacity | Extended capacity |
 | --- | ---: | ---: |
@@ -28,6 +28,7 @@ enum eGta3SaveGarageType : unsigned char {
     GARAGE_TYPE_EXTRA_HIDEOUT_7 = 28,
     GARAGE_TYPE_EXTRA_HIDEOUT_8 = 29,
     GARAGE_TYPE_EXTRA_HIDEOUT_9 = 30
+    ...ect
 };
 ```
 
@@ -45,6 +46,7 @@ GARAGE_ID_EXTRA_HIDEOUT_6
 GARAGE_ID_EXTRA_HIDEOUT_7
 GARAGE_ID_EXTRA_HIDEOUT_8
 GARAGE_ID_EXTRA_HIDEOUT_9
+    ...ect
 ```
 
 These ID aliases are just helper constants. The game stores garage behavior by `m_nType`, not by these helper ID names.
@@ -76,7 +78,7 @@ If you need multiple custom savehouses, use a different type for each location:
 GARAGE_TYPE_EXTRA_HIDEOUT_1
 GARAGE_TYPE_EXTRA_HIDEOUT_2
 GARAGE_TYPE_EXTRA_HIDEOUT_3
-// ... up to GARAGE_TYPE_EXTRA_HIDEOUT_9
+// ... up to GARAGE_TYPE_EXTRA_HIDEOUT_29
 ```
 
 Each type maps to its own save storage bank. Reusing the same extra type for multiple physical garages means those garages will share the same stored-car bank, which is usually not what you want.
@@ -103,7 +105,7 @@ The source patches GTA III 1.0 US garage logic at runtime to:
 
 - Retarget vanilla safehouse stored-car arrays into expanded plugin-owned storage.
 - Increase the save/load stored-car loop count for the three vanilla hideouts.
-- Redirect save/load to splice the nine extra safehouse banks into the garage save block.
+- Redirect save/load to splice the 29 extra safehouse banks into the garage save block.
 - Redirect hideout capacity/count helpers to support vanilla and extra hideout types.
 - Redirect store/restore paths so each extra hideout stores vehicles in its own bank.
 - Make extra hideout types run through the vanilla hideout update behavior safely.
@@ -128,7 +130,7 @@ All hardcoded addresses are for **GTA III 1.0 US**.
 
 Before shipping a mod that uses this:
 
-1. Start a new game or load a backup save.
+1. Start a new game (Garages will break if using original game save, need to make new one)
 2. Add one custom garage using `GARAGE_TYPE_EXTRA_HIDEOUT_1`.
 3. Store a vehicle, save, quit, reload, and confirm it restores.
 4. Repeat with multiple extra types to ensure each location has independent storage.
@@ -139,4 +141,4 @@ Before shipping a mod that uses this:
 
 ## License / Credits
 
-This source is designed for plugin-sdk based GTA III mod projects. Keep plugin-sdk attribution intact when distributing projects that include plugin-sdk code or headers.
+This source is designed for plugin-sdk based GTA III mod projects. Keep plugin-sdk attribution intact when distributing projects that include plugin-sdk code or headers. Slopped by Baneman, code is open sourced.
