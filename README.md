@@ -1,17 +1,4 @@
 # GTA III Garage Extender
-
-> Save this file as `README.md` in the release GitHub repository.
-
-A single-file plugin-sdk source for **Grand Theft Auto III 1.0 US** that expands safehouse garage storage and adds extra safehouse garage types for mods that want more save-garage locations.
-
-The implementation lives in:
-
-```text
-GTA3QuadrupleSaveGarageLimit.cpp
-```
-
-Copy that file into a plugin-sdk III project, or use it as the project `Main.cpp`.
-
 ---
 
 ## Features
