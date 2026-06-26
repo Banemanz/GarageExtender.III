@@ -9,6 +9,11 @@
 //
 // This file deliberately stays self-contained: no plugin-sdk headers are edited.
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+
 #include "plugin.h"
 #include "CGarage.h"
 #include "CGarages.h"
@@ -170,7 +175,7 @@ namespace {
     int gCurrentGarageStorageIndex = -1;
     int gCurrentGarageCapacity = 0;
 
-    constexpr char kIniPath[] = ".\\GTA3GarageExtender.ini";
+    constexpr char kIniPath[] = ".\\GarageExtender.III.ini";
     constexpr char kIniSection[] = "GarageCapacity";
     constexpr const char* kIniCapacityKeys[TOTAL_SAFEHOUSE_COUNT] = {
         "PortlandHideout",
@@ -261,19 +266,23 @@ namespace {
     }
 
     void CreateDefaultIniIfMissing() {
+        // First-run generation only.  Do not rewrite existing configs, because users
+        // are expected to tune these capacities by hand.
         if (IniExists()) {
             return;
         }
 
-        std::ofstream file(kIniPath);
+        std::ofstream file(kIniPath, std::ios::out | std::ios::trunc);
         if (!file.is_open()) {
             return;
         }
 
         file << "; GTA III Garage Extender configuration\n";
         file << "; Created automatically on first launch. Existing files are not overwritten.\n";
+        file << "; Edit these values, then restart the game.\n";
         file << "; Values are clamped from 0 to " << PHYSICAL_SLOTS_PER_SAFEHOUSE << " because each savehouse bank reserves " << PHYSICAL_SLOTS_PER_SAFEHOUSE << " physical slots.\n";
-        file << "; Set a value to 0 to disable storing cars for that garage type.\n\n";
+        file << "; Set a value to 0 to disable storing cars for that garage type.\n";
+        file << "; Vanilla defaults were Portland=1, Staunton=2, Shoreside=3. This mod defaults to 4x.\n\n";
         file << "[" << kIniSection << "]\n";
         for (int i = 0; i < TOTAL_SAFEHOUSE_COUNT; ++i) {
             file << kIniCapacityKeys[i] << "=" << gGarageCapacities[i] << "\n";
@@ -408,7 +417,10 @@ namespace {
         const auto storageIndex = StorageIndexForGarage(garage);
         CStoredCar* redirectedCars = CarsForSaveGarageIndex(storageIndex);
         const auto redirectedCount = CapacityForGarage(garage);
-        if (redirectedCars != nullptr && redirectedCount > 0) {
+        if (redirectedCars != nullptr) {
+            // Always redirect the storage pointer for savehouse garages, even when
+            // the configured capacity is 0.  Otherwise a disabled extra garage could
+            // fall back to the temporary Shoreside logic and touch the wrong bank.
             cars = redirectedCars;
             count = redirectedCount;
         }
